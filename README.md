@@ -3,6 +3,7 @@
 - [Introduction](#introduction)
     - [Data Types:](#data-types)
     - [Create and Drop DB/table:](#create-and-drop-dbtable)
+    - [column constraints:](#column-constraints)
 
 # Introduction
 PostgreSQL is an open-source, object-relational database management system (ORDBMS).
@@ -48,5 +49,83 @@ create table students (
 
 -- drop table students
 drop table if exists students
+```
+
+### column constraints:
+
+- NOT NULL
+
+```sql
+CREATE TABLE example (
+    name VARCHAR(50) NOT NULL
+)
+```
+
+- UNIQUE:
+
+```sql
+CREATE TABLE example (
+    email VARCHAR(100) UNIQUE
+)
+```
+
+- PRIMARY KEY:
+
+```sql
+CREATE TABLE example (
+    student_id SERIAL PRIMARY KEY,
+)
+```
+
+- Foreign key:
+
+```sql
+CREATE TABLE example (
+    order_id SERIAL PRIMARY KEY,
+    product_id INTEGER REFERENCES product(product_id)
+)
+```
+![alt text](./images/foreign-key.png)
+
+- DEFAULT:
+  
+```sql
+CREATE TABLE example (
+    status VARCHAR(20) DEFAULT 'active'
+)
+```
+
+- CHECK
+
+
+```sql
+CREATE TABLE example (
+    age INT CHECK (age >= 18) 
+)
+```
+
+example: 
+
+```sql
+create table students(
+	student_id SERIAL PRIMARY KEY,
+	full_name VARCHAR(100) NOT NULL,
+	email VARCHAR(100) UNIQUE,
+	age INT CHECK (age >= 18),
+	status VARCHAR(20) DEFAULT 'active'
+)
+```
+
+```sql
+CREATE TABLE students (
+    student_id SERIAL,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    age INT CHECK (age >= 18),
+    status VARCHAR(20) DEFAULT 'active',
+
+    PRIMARY KEY (student_id),
+    UNIQUE (username, email)
+);
 ```
 

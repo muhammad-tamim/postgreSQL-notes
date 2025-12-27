@@ -4,6 +4,7 @@
     - [Data Types:](#data-types)
     - [Create and Drop DB/table:](#create-and-drop-dbtable)
     - [column constraints:](#column-constraints)
+    - [data insert to table:](#data-insert-to-table)
 
 # Introduction
 PostgreSQL is an open-source, object-relational database management system (ORDBMS).
@@ -127,5 +128,32 @@ CREATE TABLE students (
     PRIMARY KEY (student_id),
     UNIQUE (username, email)
 );
+```
+
+### data insert to table:
+
+- single row insert: 
+
+```sql
+CREATE TABLE person (
+	id SERIAL PRIMARY KEY,
+	username VARCHAR(50) UNIQUE,
+	email VARCHAR(50) UNIQUE,
+	age INT CHECK (age >= 20),
+	isActive BOOLEAN DEFAULT true
+);
+
+INSERT INTO person (username, email, age)
+VALUES ('tamim', 'tamim@gmail.com', 28);
+```
+
+- multi row insert:
+
+```sql
+INSERT INTO person (username, email, age)
+VALUES
+    ('alice', 'alice@gmail.com', 24),
+    ('bob', 'bob@gmail.com', 30),
+    ('charlie', 'charlie@gmail.com', 22);
 ```
 

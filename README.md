@@ -5,6 +5,7 @@
     - [Create and Drop DB/table:](#create-and-drop-dbtable)
     - [column constraints:](#column-constraints)
     - [data insert to table:](#data-insert-to-table)
+    - [Alter:](#alter)
 
 # Introduction
 PostgreSQL is an open-source, object-relational database management system (ORDBMS).
@@ -157,3 +158,71 @@ VALUES
     ('charlie', 'charlie@gmail.com', 22);
 ```
 
+### Alter:
+![alt text](./images/alter.png)
+
+```sql
+CREATE TABLE stu(
+	id SERIAL,
+	name VARCHAR(30),
+	email TEXT,
+	age INT,
+	status TEXT
+)
+```
+
+- Rename table:
+
+```sql
+ALTER TABLE stu RENAME to students
+```
+
+- add a table level constrains:
+
+```sql
+ALTER TABLE students ADD CONSTRAINT unique_students_email UNIQUE (email)
+```
+
+```sql
+ALTER TABLE students ADD CONSTRAINT primary_students_id PRIMARY KEY (id)
+```
+
+- add column: 
+
+```sql
+ALTER TABLE students ADD COLUMN isMarid BOOLEAN
+```
+
+- drop Column: 
+
+```sql
+ALTER TABLE students DROP COLUMN isMarid
+```
+
+- Rename a column: 
+
+```sql
+ALTER TABLE students RENAME COLUMN name TO username
+```
+
+- Modify a constrains: 
+
+```sql
+ALTER TABLE students ALTER COLUMN username TYPE VARCHAR(50) 
+```
+
+- add a constrains: 
+
+```sql
+ALTER TABLE students ALTER COLUMN email SET NOT NULL
+```
+
+```sql
+ALTER TABLE students ALTER COLUMN status SET DEFAULT 'active'
+```
+
+- drop a constrains: 
+
+```sql
+ALTER TABLE students ALTER COLUMN email DROP NOT NULL
+```

@@ -1,15 +1,16 @@
 <h1 align="center">PostgreSQL Notes</h1>
 
 - [Introduction](#introduction)
-    - [Data Types:](#data-types)
-    - [Create and Drop DB/table:](#create-and-drop-dbtable)
-    - [column constraints:](#column-constraints)
-    - [data insert to table:](#data-insert-to-table)
-    - [Alter:](#alter)
-    - [SELECT:](#select)
-      - [Scalar Function:](#scalar-function)
-      - [Aggregate Function:](#aggregate-function)
-    - [Practice questions:](#practice-questions)
+		- [Data Types:](#data-types)
+		- [Create and Drop DB/table:](#create-and-drop-dbtable)
+		- [column constraints:](#column-constraints)
+		- [data insert to table:](#data-insert-to-table)
+		- [Alter:](#alter)
+		- [SELECT:](#select)
+			- [Scalar Function:](#scalar-function)
+			- [Aggregate Function:](#aggregate-function)
+		- [Limit, Offset pagination:](#limit-offset-pagination)
+		- [Practice questions:](#practice-questions)
 
 # Introduction
 PostgreSQL is an open-source, object-relational database management system (ORDBMS).
@@ -448,6 +449,104 @@ SELECT MAX(age) FROM students
 SELECT COUNT(first_name) FROM students
 -- or
 -- SELECT COUNT(*) FROM students
+```
+
+
+### Limit, Offset pagination:
+
+```sql
+select * from customers limit 5
+```
+
+```sql
+select * from customers limit 5 offset 2
+-- here offset removes first 2 data
+```
+
+pagination:
+
+```sql
+select * from customers limit 5 offset 5 * 0
+select * from customers limit 5 offset 5 * 1
+select * from customers limit 5 offset 5 * 2
+```
+
+### Update and delete data: 
+
+Update: 
+
+```sql
+UPDATE customers SET email = 'default@mail.com' WHERE email IS null
+```
+```sql
+UPDATE customers SET customer_first_name = 'yoyo', email = 'youo@gmail.com' WHERE customer_id = 1
+```
+
+Delete:
+
+```sql
+DELETE FROM customers WHERE customer_first_name = 'yoyo'
+```
+
+### GROUP BY:
+
+```sql
+SELECT country from customers group by country
+```
+
+```sql
+SELECT grade, count(*) FROM students GROUP BY grade
+```
+
+With having: 
+
+```sql
+SELECT course, count(*) FROM students GROUP BY course HAVING count(*) > 4
+```
+
+```sql
+SELECT country, avg(age) FROM students GROUP BY country HAVING AVG(age) > 21 
+```
+
+### Foreign key: 
+
+```sql
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	username VARCHAR(25) NOT NULL
+)
+```
+
+```sql
+CREATE TABLE POSTS (
+	id SERIAL PRIMARY KEY,
+	title TEXT NOT NULL,
+	user_id INT REFERENCES "users"(id)
+)
+```
+
+```sql
+INSERT INTO users (username) 
+VALUES ('tamim'), ('gamim'), ('samim'), ('lamim'), ('halim')
+```
+
+```sql
+INSERT INTO posts (title, user_id) 
+VALUES 
+	('Enjoying a sunny day with akash!', 2),
+	('Batash just shared an amazing recipe', 1),
+	('Exploring adventures with sagor', 4),
+	('Nodi, wisdom always leaves me inspire', 4)
+```
+
+### Inner Join:
+
+```sql
+SELECT title, username FROM posts JOIN users ON posts.user_id = users.id
+```
+
+```sql
+SELECT * FROM posts JOIN users ON posts.user_id = users.id
 ```
 
 

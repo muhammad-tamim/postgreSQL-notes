@@ -806,3 +806,36 @@ SELECT * FROM employees WHERE salary = (
   SELECT MAX(salary) FROM employees WHERE department = 'HR'
 )
 ```
+
+### Function: 
+
+- With return:  
+
+```sql
+CREATE FUNCTION emp_count()
+RETURNS INT
+LANGUAGE SQL
+AS 
+$$
+  SELECT COUNT(*) FROM employees
+$$   
+```
+```sql
+SELECT emp_count()
+```
+
+- No return:
+
+```sql
+CREATE FUNCTION delete_emp_id(emp_id INT)
+RETURNS VOID
+LANGUAGE SQL
+AS 
+$$
+  DELETE FROM employees WHERE id = emp_id
+$$
+```
+
+```sql
+SELECT delete_emp_id(5)
+```

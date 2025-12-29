@@ -773,3 +773,36 @@ SELECT department_name, ROUND(AVG(salary)) AS avg_salary FROM employees
 -- 5. Count employees hired each year:
 SELECT EXTRACT(year from hire_date) AS hired_year, COUNT(*) FROM employees GROUP BY hired_year
 ```
+
+### Subquery:
+
+```sql
+CREATE TABLE employees (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50),
+  department VARCHAR(50),
+  salary INT
+)
+
+INSERT INTO employees (name, department, salary) 
+VALUES
+  ('Tamim', 'IT', 50000),
+  ('Gamim', 'HR', 40000),
+  ('Samim', 'IT', 60000),
+  ('Lamim', 'Finance', 45000),
+  ('Famim', 'HR', 35000)
+
+-- Find the highest salary
+SELECT MAX(salary) from employees
+
+-- Find which employee gets the highest salary
+SELECT * FROM employees WHERE salary = (SELECT MAX(salary) from employees)
+
+-- Find employees who earn more than the average salary
+SELECT * FROM employees WHERE salary > (SELECT AVG(salary) from employees)
+
+-- Name of the employee who gets the highest salray in HR department
+SELECT * FROM employees WHERE salary = (
+  SELECT MAX(salary) FROM employees WHERE department = 'HR'
+)
+```

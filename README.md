@@ -552,6 +552,8 @@ SELECT * FROM posts JOIN users ON posts.user_id = users.id
 
 ### Practice questions:
 
+#### Part 1:
+
 https://github.com/Apollo-Level2-Web-Dev/postgreSQL_query_task
 
 - create table
@@ -711,4 +713,63 @@ SELECT
 	MAX(total_amount) as maximum_order_amount,
 	MIN(total_amount) as min_order_amount
 from orders WHERE order_date >= '2023-06-01' AND order_date <= '2023-06-30';
+```
+
+#### part 2:
+
+```sql
+CREATE TABLE employees(
+  employee_id SERIAL PRIMARY KEY,
+  employee_name VARCHAR(50),
+  department_id INT REFERENCES departments (department_id),
+  salary DECIMAL(10, 2),
+  hire_date DATE
+);
+
+CREATE TABLE departments(
+  department_id SERIAL PRIMARY KEY,
+  department_name VARCHAR(50)
+)
+
+INSERT INTO departments (department_name)
+VALUES ('HR'), ('Marketing'), ('Finance'), ('IT'), ('Sales'), ('Engineering'), ('Customer Support'), ('Administration'), ('Research'), ('QA')
+
+INSERT INTO employees (employee_name, department_id, salary, hire_date)
+VALUES 
+('Alice Johnson', 1, 45000.00, '2021-03-15'),      -- HR
+('Bob Smith', 2, 52000.00, '2020-07-10'),          -- Marketing
+('Charlie Brown', 3, 60000.00, '2019-01-20'),      -- Finance
+('David Wilson', 4, 75000.00, '2018-09-05'),       -- IT
+('Eva Green', 5, 48000.00, '2022-02-18'),          -- Sales
+('Frank Miller', 6, 82000.00, '2017-11-30'),       -- Engineering
+('Grace Lee', 7, 40000.00, '2023-04-12'),          -- Customer Support
+('Henry Adams', 8, 43000.00, '2021-06-25'),        -- Administration
+('Ivy Clark', 9, 68000.00, '2020-10-08'),          -- Research
+('Jack Turner', 10, 55000.00, '2019-05-14'),       -- QA
+
+('Karen White', 4, 72000.00, '2022-08-01'),        -- IT
+('Leo Martin', 6, 90000.00, '2016-12-19'),         -- Engineering
+('Mia Scott', 5, 51000.00, '2021-01-07'),          -- Sales
+('Noah Harris', 2, 58000.00, '2020-03-22'),        -- Marketing
+('Olivia Young', 1, 47000.00, '2023-01-10');       -- HR
+
+-- 1. Inner join to retrieve employee and department information
+
+-- SELECT * FROM employees AS e INNER JOIN departments AS d on e.employee_id = d.department_id
+SELECT * FROM employees INNER JOIN departments USING(department_id)
+
+-- 2. Show department name with average salary
+SELECT department_name, ROUND(AVG(salary)) FROM employees 
+  INNER JOIN departments USING(department_id) GROUP BY department_name
+
+-- 3. Count employee in each department
+SELECT department_name, COUNT(*) FROM employees 
+  INNER JOIN departments USING(department_id) GROUP BY department_name
+
+-- 4. Find the department name with the highest average salary
+SELECT department_name, ROUND(AVG(salary)) AS avg_salary FROM employees 
+  INNER JOIN departments USING(department_id) GROUP BY department_name ORDER BY avg_salary DESC LIMIT 1
+
+-- 5. Count employees hired each year:
+SELECT EXTRACT(year from hire_date) AS hired_year, COUNT(*) FROM employees GROUP BY hired_year
 ```

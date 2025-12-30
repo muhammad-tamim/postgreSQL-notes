@@ -892,3 +892,15 @@ $$
 
 select delete_emp_id(3)
 ```
+
+###  indexing:
+
+```sql
+explain analyse
+select * from users where email = 'test1@gmail.com'
+
+create index idx_users_email on users (email)
+
+explain analyse
+select * from users where email = 'test1@gmail.com'
+```

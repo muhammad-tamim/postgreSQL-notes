@@ -1,6 +1,6 @@
 <h1 align="center">PostgreSQL Notes</h1>
 
-- [Installation \& Setup:](#installation--setup)
+- [Setup:](#setup)
 - [Introduction:](#introduction)
 	- [What is PostgreSQL:](#what-is-postgresql)
 	- [Features of PostgreSQL:](#features-of-postgresql)
@@ -10,7 +10,16 @@
 		- [Difference Between ACID and Base Compliance:](#difference-between-acid-and-base-compliance)
 	- [PostgreSQL vs MySQL Vs MongoDB:](#postgresql-vs-mysql-vs-mongodb)
 
-# Installation & Setup: 
+# Setup: 
+- Step 1: Download postgres and install:
+![alt text](./assets/images/setup/postgres-download.png)
+
+- Step 2: We can use postgres builtin GUI pgAdmin4 or Beekeeper Studio: 
+
+![alt text](./assets/images/setup/pgadmin4.png)
+![alt text](./assets/images/setup/beekeeper-stdio.png)
+
+Note: Beekeeper Studio if more preferable. 
 
 # Introduction:
 ## What is PostgreSQL:

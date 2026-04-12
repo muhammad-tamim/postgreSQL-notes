@@ -9,8 +9,11 @@
 		- [Base Compliance:](#base-compliance)
 		- [Difference Between ACID and Base Compliance:](#difference-between-acid-and-base-compliance)
 	- [PostgreSQL vs MySQL Vs MongoDB:](#postgresql-vs-mysql-vs-mongodb)
-- [Table:](#table)
-	- [Table Operations In PostgreSQL](#table-operations-in-postgresql)
+	- [Schema vs Query:](#schema-vs-query)
+- [Database and Table:](#database-and-table)
+	- [Database Operations in PostgreSQL:](#database-operations-in-postgresql)
+	- [Table Operations in PostgreSQL](#table-operations-in-postgresql)
+- [Data Types in PostgresSQL:](#data-types-in-postgressql)
 
 # Setup: 
 - Step 1: Download postgres and install:
@@ -77,8 +80,37 @@ BASE is a set of principles designed for high availability and scalability in di
 | JSON Support   | Yes (JSONB, powerful)          | Limited                 | Native                 |
 | Performance    | Best for complex queries       | Fast for simple queries | Best for flexible data |
 
-# Table:
-## Table Operations In PostgreSQL
+## Schema vs Query: 
+- Schema: Define structure of our data
+- Query: Any SQL instruction sent to the database
+
+# Database and Table:
+## Database Operations in PostgreSQL: 
+
+```sql
+-- Create Database
+CREATE DATABASE database_name;
+
+-- Rename Database
+ALTER DATABASE old_name RENAME TO new_name;
+
+-- Drop Database
+DROP DATABASE database_name;
+
+-- Drop Database if exists
+DROP DATABASE IF EXISTS database_name;
+
+-- Change database owner
+ALTER DATABASE database_name OWNER TO new_owner;
+
+-- Set database configuration (example)
+ALTER DATABASE database_name SET timezone TO 'UTC';
+
+-- Reset database configuration
+ALTER DATABASE database_name RESET timezone;
+```
+
+## Table Operations in PostgreSQL
 
 ```sql
 -- Create Table
@@ -158,3 +190,46 @@ CREATE TABLE new_table LIKE existing_table;
 -- Copy Table with Data
 CREATE TABLE new_table AS SELECT * FROM existing_table;
 ```
+
+
+# Data Types in PostgresSQL: 
+
+| Type Category | Data Type          | Description                                                         | Example                                  |
+| ------------- | ------------------ | ------------------------------------------------------------------- | ---------------------------------------- |
+| Text          | `TEXT`             | Unlimited length string (preferred instead of char and varchar)     | `'Tamim'`                                |
+| Text          | `VARCHAR(n)`       | Limited length string (0 to n)                                      | `'Tamim'`                                |
+| Text          | `CHAR(n)`          | Fixed length string with white space (can be slower due to padding) | `'T    '`                                |
+| Numeric       | `INT` / `INTEGER`  | Whole numbers                                                       | `25`                                     |
+| Numeric       | `BIGINT`           | Large whole numbers                                                 | `9223372036854775807`                    |
+| Numeric       | `SMALLINT`         | Small whole numbers                                                 | `120`                                    |
+| Numeric       | `NUMERIC(p,s)`     | Precise decimal (money)                                             | `99.99`                                  |
+| Numeric       | `DECIMAL`          | Same as NUMERIC                                                     | `10.50`                                  |
+| Numeric       | `REAL`             | Floating point number                                               | `3.14`                                   |
+| Numeric       | `DOUBLE PRECISION` | High precision float                                                | `3.1415926535`                           |
+| Boolean       | `BOOLEAN`          | true/false                                                          | `TRUE`                                   |
+| Date/Time     | `DATE`             | Date only                                                           | `'2026-04-12'`                           |
+| Date/Time     | `TIME`             | Time only                                                           | `'14:30:00'`                             |
+| Date/Time     | `TIMESTAMP`        | Date + time                                                         | `'2026-04-12 14:30:00'`                  |
+| Date/Time     | `TIMESTAMPTZ`      | Timestamp with timezone                                             | `'2026-04-12 14:30:00+06'`               |
+| Date/Time     | `INTERVAL`         | Time duration                                                       | `'2 days'`                               |
+| UUID          | `UUID`             | Unique identifier                                                   | `'550e8400-e29b-41d4-a716-446655440000'` |
+| JSON          | `JSON`             | JSON data (text format)                                             | `'{"name":"Tamim"}'`                     |
+| JSON          | `JSONB`            | Binary JSON (faster, recommended)                                   | `'{"name":"Tamim"}'`                     |
+| Array         | `TEXT[]`           | Array of strings                                                    | `{'a','b','c'}`                          |
+| Array         | `INT[]`            | Array of integers                                                   | `{1,2,3}`                                |
+| Binary        | `BYTEA`            | Binary data (images/files)                                          | `\xDEADBEEF`                             |
+| Network       | `INET`             | IP address                                                          | `'192.168.1.1'`                          |
+| Network       | `CIDR`             | Network address                                                     | `'192.168.0.0/24'`                       |
+| Network       | `MACADDR`          | MAC address                                                         | `'08:00:2b:01:02:03'`                    |
+| Money         | `MONEY`            | Currency type                                                       | `$100.00`                                |
+| Full-text     | `TSVECTOR`         | Search optimized text                                               | `'fast search vector'`                   |
+| Full-text     | `TSQUERY`          | Full-text query                                                     | `'postgres & sql'`                       |
+| Geometric     | `POINT`            | X,Y coordinate                                                      | `(10,20)`                                |
+| Geometric     | `LINE`             | Infinite line                                                       | `'{1,2,3}'`                              |
+| Geometric     | `BOX`              | Rectangle                                                           | `'((0,0),(10,10))'`                      |
+
+Note: 
+- `name CHAR(10)`: Always uses full length n. SO if we insert `tamim` it will add white space for rest `'Tamim     '` to match always exactly 10 characters
+- `name VARCHAR(10)`: Uses only required space of 0 to n. SO if we insert `tamim` it will don't give error unless 10 character.   
+
+

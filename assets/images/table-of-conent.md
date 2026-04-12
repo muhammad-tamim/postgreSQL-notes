@@ -1,5 +1,4 @@
 
-- [02. Database \& Schema Fundamentals](#02-database--schema-fundamentals)
 - [03. Table Definition (DDL)](#03-table-definition-ddl)
 - [04. CRUD Operations](#04-crud-operations)
 - [05. Querying \& Filtering (Intermediate)](#05-querying--filtering-intermediate)
@@ -17,32 +16,6 @@
 - [17. Schema Design Patterns](#17-schema-design-patterns)
 - [18. Monitoring \& Observability](#18-monitoring--observability)
 - [19. Real-World Examples](#19-real-world-examples)
-
-### 02. Database & Schema Fundamentals
-- Databases & Schemas
-  - CREATE DATABASE, DROP DATABASE
-  - CREATE SCHEMA, search_path
-  - Schemas as namespaces
-  - public schema by default
-- Data Types
-  - Numeric types (INTEGER, BIGINT, NUMERIC, SERIAL, etc.)
-  - String types (VARCHAR, TEXT, CHAR)
-  - Boolean type
-  - Date & Time types (TIMESTAMP, DATE, INTERVAL, etc.)
-  - UUID
-  - JSON & JSONB
-  - Arrays
-  - Enum types
-  - Network types (INET, CIDR, MACADDR)
-  - Range types
-  - Custom types
-- NULL in PostgreSQL
-  - NULL vs empty string
-  - IS NULL / IS NOT NULL
-  - COALESCE(), NULLIF()
-  - NULL behavior in comparisons
-
----
 
 ### 03. Table Definition (DDL)
 - CREATE TABLE

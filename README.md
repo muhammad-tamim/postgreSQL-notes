@@ -2,18 +2,33 @@
 
 - [Setup:](#setup)
 - [Introduction:](#introduction)
-	- [What is PostgreSQL:](#what-is-postgresql)
-	- [Features of PostgreSQL:](#features-of-postgresql)
-	- [What is ACID and BASE compliance:](#what-is-acid-and-base-compliance)
-		- [ACID Compliance:](#acid-compliance)
-		- [Base Compliance:](#base-compliance)
-		- [Difference Between ACID and Base Compliance:](#difference-between-acid-and-base-compliance)
-	- [PostgreSQL vs MySQL Vs MongoDB:](#postgresql-vs-mysql-vs-mongodb)
-	- [Schema vs Query:](#schema-vs-query)
-- [Database and Table:](#database-and-table)
-	- [Database Operations in PostgreSQL:](#database-operations-in-postgresql)
-	- [Table Operations in PostgreSQL](#table-operations-in-postgresql)
-- [Data Types in PostgresSQL:](#data-types-in-postgressql)
+  - [What is PostgreSQL:](#what-is-postgresql)
+  - [Features of PostgreSQL:](#features-of-postgresql)
+  - [What is ACID and BASE compliance:](#what-is-acid-and-base-compliance)
+    - [ACID Compliance:](#acid-compliance)
+    - [Base Compliance:](#base-compliance)
+    - [Difference Between ACID and Base Compliance:](#difference-between-acid-and-base-compliance)
+  - [PostgreSQL vs MySQL Vs MongoDB:](#postgresql-vs-mysql-vs-mongodb)
+  - [Schema vs Query:](#schema-vs-query)
+- [Schema:](#schema)
+  - [Common Data Types:](#common-data-types)
+    - [Numeric types:](#numeric-types)
+    - [String types:](#string-types)
+    - [Date \& Time types:](#date--time-types)
+    - [Others Types:](#others-types)
+  - [Column Constraints:](#column-constraints)
+    - [NOT NULL:](#not-null)
+    - [UNIQUE:](#unique)
+    - [PRIMARY KEY:](#primary-key)
+    - [FOREIGN KEY:](#foreign-key)
+      - [ON DELETE options:](#on-delete-options)
+        - [ON DELETE CASCADE:](#on-delete-cascade)
+        - [ON DELETE SET NULL:](#on-delete-set-null)
+        - [ON DELETE RESTRICT:](#on-delete-restrict)
+    - [CHECK:](#check)
+    - [DEFAULT:](#default)
+    - [SERIAL:](#serial)
+    - [IDENTITY:](#identity)
 
 # Setup: 
 - Step 1: Download postgres and install:
@@ -84,152 +99,244 @@ BASE is a set of principles designed for high availability and scalability in di
 - Schema: Define structure of our data
 - Query: Any SQL instruction sent to the database
 
-# Database and Table:
-## Database Operations in PostgreSQL: 
+
+# Schema: 
+A Schema defines the structure of our data. 
+
+Syntax: 
+```sql
+CREATE TABLE IF NOT EXISTS users (
+    column_name data_type/schema_type column_constraints,
+    column_name data_type/schema_type column_constraints,
+    ...
+);
+```
+here, 
+1. CREATE TABLE IF NOT EXISTS: Command to create a new table in the database if not exist
+2. users: Table name
+3. name, email are column names
+4. data_type: Defines what kind of data the column stores
+5. constraints: Rules applied to a column
+ 
+## Common Data Types: 
+### Numeric types:
+
+| Type               | Description                                                 | Example                                  |
+| ------------------ | ----------------------------------------------------------- | ---------------------------------------- |
+| `SMALLINT`         | 2 bytes (small numbers)                                     | age, quantity etc only small numbers     |
+| `INT`              | 4 bytes (most common)                                       | default choice                           |
+| `BIGINT`           | 8 bytes (large numbers)                                     | large counters when overflow is possible |
+| `NUMERIC/DECIMAL`  | variable (exact precision)                                  | money or exact values (always)           |
+| `REAL`             | 4 bytes (less precise float, ~6 decimal digits precision)   | approximate scientific data only         |
+| `DOUBLE PRECISION` | 8 Bytes (high precision float, 15 decimal digits precision) | approximate scientific data only         |
+| `SERIAL`           | 4 bytes same as INT (Auto increment 1, 2, 3, 4)             | For PRIMARY KEY                          |
+| ` BIGSERIAL`       | 8 bytes same as BIGINT (Auto increment 1, 2, 3, 4)          | For Large PRIMARY KEY                    |
 
 ```sql
--- Create Database
-CREATE DATABASE database_name;
+CREATE TABLE IF NOT EXISTS numeric_types_demo (
+    id SERIAL PRIMARY KEY,                      -- auto increment (INT)
+    id BIGSERIAL PRIMARY KEY,                   -- auto increment (BIGINT)
 
--- Rename Database
-ALTER DATABASE old_name RENAME TO new_name;
+    small_number SMALLINT,                      -- 10, -5, 300
+    normal_number INT,                          -- 1000, 250000
+    big_number BIGINT,                          -- 10000000000
 
--- Drop Database
-DROP DATABASE database_name;
+    exact_money NUMERIC(10,2),                  -- 10.00, 10.99
+    exact_precise NUMERIC(10,6),                -- 10.123456
 
--- Drop Database if exists
-DROP DATABASE IF EXISTS database_name;
-
--- Change database owner
-ALTER DATABASE database_name OWNER TO new_owner;
-
--- Set database configuration (example)
-ALTER DATABASE database_name SET timezone TO 'UTC';
-
--- Reset database configuration
-ALTER DATABASE database_name RESET timezone;
+    approx_real REAL,                           -- 10.123457 (rounded after 6 digits)
+    approx_double DOUBLE PRECISION,             -- 10.123456789123457 (rounded after 15 digits)
+);
 ```
 
-## Table Operations in PostgreSQL
+### String types:
+
+| Type         | Description                                   | Example                         |
+| ------------ | --------------------------------------------- | ------------------------------- |
+| `CHAR(n)`    | Fixed n length of string (padded with spaces) | fixed codes like `'A'`, `'USD'` |
+| `VARCHAR(n)` | Variable n length string with limit           | names, titles (`'Tamim'`)       |
+| `TEXT`       | Variable-length length string                 | descriptions, blog content      |
+
 
 ```sql
--- Create Table
-CREATE TABLE users (...);
+CREATE TABLE IF NOT EXISTS string_types_demo (
+    id SERIAL PRIMARY KEY,                         -- auto increment
 
--- Create Table if not exists
-CREATE TABLE IF NOT EXISTS users (...);
+    fixed_char CHAR(5),                            -- 'A    ', 'BD   ' (padded)
+    short_text VARCHAR(50),                        -- 'Hello World'
+    long_text TEXT                                 -- large content
+);
+```
 
--- Rename Table
-ALTER TABLE users RENAME TO customers;
+### Date & Time types:
 
--- Drop Table
-DROP TABLE users;
+| Type          | Description                             | Example                            |
+| ------------- | --------------------------------------- | ---------------------------------- |
+| `DATE`        | Stores date only (no time)              | `'2026-04-13'`                     |
+| `TIME`        | Stores time only (no date)              | `'14:30:00'`                       |
+| `TIMESTAMP`   | Date + time (no timezone)               | `'2026-04-13 14:30:00'`            |
+| `TIMESTAMPTZ` | Date + time with timezone (recommended) | `'2026-04-13 14:30:00+06'`         |
+| `INTERVAL`    | Duration / difference between times     | `'2 days'`, `'3 hours 30 minutes'` |
 
--- Drop Table if exists
-DROP TABLE IF EXISTS users;
+```sql
+CREATE TABLE IF NOT EXISTS datetime_types_demo (
+    id SERIAL PRIMARY KEY,                          -- auto increment
 
--- Truncate Table: remove all data in the table
-TRUNCATE TABLE users;
+    only_date DATE,                                 -- '2026-04-13'
+    only_time TIME,                                 -- '14:30:00'
 
--- Add Column
-ALTER TABLE users ADD COLUMN column_name TYPE;
+    simple_timestamp TIMESTAMP,                     -- '2026-04-13 14:30:00'
+    tz_timestamp TIMESTAMPTZ,                       -- '2026-04-13 14:30:00+06'
 
--- Drop Column
-ALTER TABLE users DROP COLUMN column_name;
+    duration INTERVAL                               -- '2 days', '3 hours'
+);
+```
 
--- Rename Column
-ALTER TABLE users RENAME COLUMN old_name TO new_name;
+### Others Types: 
+| Type            | Description                                                      | Example                                                     |
+| --------------- | ---------------------------------------------------------------- | ----------------------------------------------------------- |
+| `BOOLEAN`       | Accepts true, false and null by: TRUE, FALSE, NULL, 1/0, 't'/'f' | is_active                                                   |
+| `UUID`          | Universally unique identifier                                    | user_id, order_id: `'550e8400-e29b-41d4-a716-446655440000'` |
+| `JSON`          | Stores JSON as text (text format, slower)                        | `'{"name": "Tamim"}'`                                       |
+| `JSONB`         | Binary JSON (faster, indexable, recommended)                     | `'{"name": "Tamim"}'`                                       |
+| `ARRAY: TYPE[]` | Stores multiple values in one column of same types               | `'{1,2,3}'`, `'{apple,banana}'`                             |
+| `ENUM`          | Fixed set of predefined values                                   | `user_role: 'admin'`, `'seller'`                            |
 
--- Change Column Type
-ALTER TABLE users ALTER COLUMN column_name TYPE NEW_TYPE;
 
--- Set Default Value
-ALTER TABLE users ALTER COLUMN column_name SET DEFAULT value;
+```sql
+-- ENUM must be created first
+CREATE TYPE order_status AS ENUM ('pending', 'completed', 'cancelled');
 
--- Drop Default Value
-ALTER TABLE users ALTER COLUMN column_name DROP DEFAULT;
+CREATE TABLE IF NOT EXISTS other_types_demo (
+    id SERIAL PRIMARY KEY,                          -- auto increment
 
--- Set NOT NULL
-ALTER TABLE users ALTER COLUMN column_name SET NOT NULL;
+    is_active BOOLEAN,                              -- true / false
 
--- Drop NOT NULL
-ALTER TABLE users ALTER COLUMN column_name DROP NOT NULL;
+    user_uuid UUID,                                 -- unique identifier
 
--- Add Constraint
-ALTER TABLE users ADD CONSTRAINT constraint_name UNIQUE (column_name);
+    json_data JSON,                                 -- raw JSON
+    jsonb_data JSONB,                               -- optimized JSON
 
--- Drop Constraint
-ALTER TABLE users DROP CONSTRAINT constraint_name;
+    int_array INT[],                                -- {1,2,3}
+    text_array TEXT[],                              -- {'apple','banana'}
 
--- Add Primary Key
-ALTER TABLE users ADD PRIMARY KEY (column_name);
-
--- Drop Primary Key
-ALTER TABLE users DROP CONSTRAINT table_name_pkey;
-
--- Add Foreign Key
-ALTER TABLE table_name 
-ADD CONSTRAINT fk_name 
-FOREIGN KEY (column_name) REFERENCES ref_table(column_name);
-
--- Drop Foreign Key
-ALTER TABLE table_name DROP CONSTRAINT fk_name;
-
--- Create Index
-CREATE INDEX index_name ON table_name(column_name);
-
--- Drop Index
-DROP INDEX index_name;
-
--- Create Temporary Table
-CREATE TEMP TABLE temp_table_name (...);
-
--- Copy Table Structure
-CREATE TABLE new_table LIKE existing_table;
-
--- Copy Table with Data
-CREATE TABLE new_table AS SELECT * FROM existing_table;
+    status order_status                             -- ENUM
+);
 ```
 
 
-# Data Types in PostgresSQL: 
+## Column Constraints: 
 
-| Type Category | Data Type          | Description                                                         | Example                                  |
-| ------------- | ------------------ | ------------------------------------------------------------------- | ---------------------------------------- |
-| Text          | `TEXT`             | Unlimited length string (preferred instead of char and varchar)     | `'Tamim'`                                |
-| Text          | `VARCHAR(n)`       | Limited length string (0 to n)                                      | `'Tamim'`                                |
-| Text          | `CHAR(n)`          | Fixed length string with white space (can be slower due to padding) | `'T    '`                                |
-| Numeric       | `INT` / `INTEGER`  | Whole numbers                                                       | `25`                                     |
-| Numeric       | `BIGINT`           | Large whole numbers                                                 | `9223372036854775807`                    |
-| Numeric       | `SMALLINT`         | Small whole numbers                                                 | `120`                                    |
-| Numeric       | `NUMERIC(p,s)`     | Precise decimal (money)                                             | `99.99`                                  |
-| Numeric       | `DECIMAL`          | Same as NUMERIC                                                     | `10.50`                                  |
-| Numeric       | `REAL`             | Floating point number                                               | `3.14`                                   |
-| Numeric       | `DOUBLE PRECISION` | High precision float                                                | `3.1415926535`                           |
-| Boolean       | `BOOLEAN`          | true/false                                                          | `TRUE`                                   |
-| Date/Time     | `DATE`             | Date only                                                           | `'2026-04-12'`                           |
-| Date/Time     | `TIME`             | Time only                                                           | `'14:30:00'`                             |
-| Date/Time     | `TIMESTAMP`        | Date + time                                                         | `'2026-04-12 14:30:00'`                  |
-| Date/Time     | `TIMESTAMPTZ`      | Timestamp with timezone                                             | `'2026-04-12 14:30:00+06'`               |
-| Date/Time     | `INTERVAL`         | Time duration                                                       | `'2 days'`                               |
-| UUID          | `UUID`             | Unique identifier                                                   | `'550e8400-e29b-41d4-a716-446655440000'` |
-| JSON          | `JSON`             | JSON data (text format)                                             | `'{"name":"Tamim"}'`                     |
-| JSON          | `JSONB`            | Binary JSON (faster, recommended)                                   | `'{"name":"Tamim"}'`                     |
-| Array         | `TEXT[]`           | Array of strings                                                    | `{'a','b','c'}`                          |
-| Array         | `INT[]`            | Array of integers                                                   | `{1,2,3}`                                |
-| Binary        | `BYTEA`            | Binary data (images/files)                                          | `\xDEADBEEF`                             |
-| Network       | `INET`             | IP address                                                          | `'192.168.1.1'`                          |
-| Network       | `CIDR`             | Network address                                                     | `'192.168.0.0/24'`                       |
-| Network       | `MACADDR`          | MAC address                                                         | `'08:00:2b:01:02:03'`                    |
-| Money         | `MONEY`            | Currency type                                                       | `$100.00`                                |
-| Full-text     | `TSVECTOR`         | Search optimized text                                               | `'fast search vector'`                   |
-| Full-text     | `TSQUERY`          | Full-text query                                                     | `'postgres & sql'`                       |
-| Geometric     | `POINT`            | X,Y coordinate                                                      | `(10,20)`                                |
-| Geometric     | `LINE`             | Infinite line                                                       | `'{1,2,3}'`                              |
-| Geometric     | `BOX`              | Rectangle                                                           | `'((0,0),(10,10))'`                      |
+| Constraint    | Description                    | Example Use                   |
+| ------------- | ------------------------------ | ----------------------------- |
+| `NOT NULL`    | Prevent empty values           | username, email               |
+| `UNIQUE`      | Prevent duplicate values       | email, username               |
+| `PRIMARY KEY` | Unique identifier for each row | id column                     |
+| `FOREIGN KEY` | Links to another table         | user_id → users.id            |
+| `CHECK`       | Validates condition            | age > 18                      |
+| `DEFAULT`     | Sets default value             | is_active = true              |
+| `SERIAL `     | Auto-increment value           | id generation for primary key |
+| `IDENTITY`    | Modern replacement for SERIAL  | id generation for primary key |
 
-Note: 
-- `name CHAR(10)`: Always uses full length n. SO if we insert `tamim` it will add white space for rest `'Tamim     '` to match always exactly 10 characters
-- `name VARCHAR(10)`: Uses only required space of 0 to n. SO if we insert `tamim` it will don't give error unless 10 character.   
+### NOT NULL: 
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL
+);
+``` 
 
+### UNIQUE: 
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE
+);
+```
 
+### PRIMARY KEY: 
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email TEXT
+);
+```
+
+### FOREIGN KEY: 
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name TEXT
+);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id)
+);
+``` 
+
+Note 1: REFERENCES is just shorthand syntax for FOREIGN KEY
+
+```sql
+user_id INT REFERENCES users(id)
+-- or
+FOREIGN KEY (user_id) REFERENCES users(id)
+```
+
+#### ON DELETE options:
+##### ON DELETE CASCADE:
+
+If parent is deleted → automatically delete all related child rows
+
+ ```sql
+ user_id INT REFERENCES users(id)  ON DELETE CASCADE
+ ```
+ ##### ON DELETE SET NULL:
+If parent is deleted → keep child rows, but set foreign key to NULL (column must allow NULL)
+
+ ```sql
+ user_id INT REFERENCES users(id) ON DELETE SET NULL
+ ```
+ ##### ON DELETE RESTRICT:
+Prevent deleting the parent row if any child rows reference it
+
+ ```sql
+ user_id INT REFERENCES users(id) ON DELETE RESTRICT
+ ```
+
+### CHECK:
+
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    price NUMERIC CHECK (price > 0),
+    stock INT CHECK (stock >= 0)
+);
+```
+
+### DEFAULT: 
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    is_active BOOLEAN DEFAULT TRUE, 
+    created_at TIMESTAMP DEFAULT NOW() -- now() === CURRENT_TIMESTAMP 
+);
+```
+
+### SERIAL: 
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,                          
+);
+```
+
+### IDENTITY: 
+
+```sql
+CREATE TABLE users (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
+);
+```

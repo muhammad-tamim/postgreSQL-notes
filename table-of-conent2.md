@@ -1,8 +1,5 @@
 
 - [4. Data Types (Core + Advanced)](#4-data-types-core--advanced)
-  - [Basic Types:](#basic-types)
-  - [Advanced Types:](#advanced-types)
-- [5. Schema \& Table Design](#5-schema--table-design)
   - [Constraints:](#constraints)
 - [6. Relationships](#6-relationships)
   - [ON DELETE / ON UPDATE:](#on-delete--on-update)
@@ -39,30 +36,6 @@
 
 
 ## 4. Data Types (Core + Advanced)
-
-### Basic Types:
-
-* INTEGER, BIGINT
-* VARCHAR, TEXT
-* BOOLEAN
-* DATE, TIME, TIMESTAMP
-
-### Advanced Types:
-
-* UUID
-* JSON / JSONB
-* ARRAY
-* ENUM
-* BYTEA
-
----
-
-## 5. Schema & Table Design
-
-* Schema (namespace)
-* CREATE TABLE
-* ALTER TABLE
-* DROP TABLE
 
 ### Constraints:
 

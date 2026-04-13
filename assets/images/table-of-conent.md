@@ -1,6 +1,4 @@
 
-- [03. Table Definition (DDL)](#03-table-definition-ddl)
-- [04. CRUD Operations](#04-crud-operations)
 - [05. Querying \& Filtering (Intermediate)](#05-querying--filtering-intermediate)
 - [06. Functions \& Operators](#06-functions--operators)
 - [07. Indexes](#07-indexes)
@@ -17,52 +15,6 @@
 - [18. Monitoring \& Observability](#18-monitoring--observability)
 - [19. Real-World Examples](#19-real-world-examples)
 
-### 03. Table Definition (DDL)
-- CREATE TABLE
-  - Column definitions
-  - Constraints (inline & table-level)
-  - CREATE TABLE IF NOT EXISTS
-  - CREATE TABLE AS
-- Constraints
-  - PRIMARY KEY (single & composite)
-  - FOREIGN KEY (CASCADE, SET NULL, RESTRICT)
-  - UNIQUE, NOT NULL, CHECK
-  - EXCLUDE constraint
-  - Deferrable constraints
-- ALTER TABLE
-  - Add / drop columns
-  - Rename column / table
-  - Modify constraints
-- Sequences & Identity
-  - SERIAL / BIGSERIAL
-  - CREATE SEQUENCE
-  - GENERATED AS IDENTITY
-- DROP & TRUNCATE
-  - DROP TABLE
-  - TRUNCATE TABLE
-  - CASCADE vs RESTRICT
-
----
-
-### 04. CRUD Operations
-- INSERT (Create)
-  - Basic insert
-  - Multi-row insert
-  - RETURNING clause
-  - ON CONFLICT (UPSERT)
-- SELECT (Read)
-  - WHERE conditions
-  - Filtering operators (IN, BETWEEN, LIKE, etc.)
-  - ORDER BY, LIMIT, OFFSET
-  - DISTINCT
-- UPDATE
-  - UPDATE with WHERE
-  - RETURNING clause
-  - CASE-based updates
-- DELETE
-  - DELETE with WHERE
-  - RETURNING clause
-  - Soft delete pattern
 
 ---
 

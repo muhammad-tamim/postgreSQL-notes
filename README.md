@@ -9,7 +9,7 @@
     - [Base Compliance:](#base-compliance)
     - [Difference Between ACID and Base Compliance:](#difference-between-acid-and-base-compliance)
   - [PostgreSQL vs MySQL Vs MongoDB:](#postgresql-vs-mysql-vs-mongodb)
-  - [Schema vs Query:](#schema-vs-query)
+  - [Schema vs Query vs CRUD:](#schema-vs-query-vs-crud)
 - [Schema:](#schema)
   - [Common Data Types:](#common-data-types)
     - [Numeric types:](#numeric-types)
@@ -29,6 +29,11 @@
     - [DEFAULT:](#default)
     - [SERIAL:](#serial)
     - [IDENTITY:](#identity)
+- [CRUD Operations:](#crud-operations)
+  - [INSERT (Create)](#insert-create)
+  - [SELECT (Read)](#select-read)
+  - [UPDATE](#update)
+  - [DELETE](#delete)
 
 # Setup: 
 - Step 1: Download postgres and install:
@@ -95,10 +100,10 @@ BASE is a set of principles designed for high availability and scalability in di
 | JSON Support   | Yes (JSONB, powerful)          | Limited                 | Native                 |
 | Performance    | Best for complex queries       | Fast for simple queries | Best for flexible data |
 
-## Schema vs Query: 
-- Schema: Define structure of our data
-- Query: Any SQL instruction sent to the database
-
+## Schema vs Query vs CRUD: 
+- Schema: Structure of the data
+- CRUD: Types of operations (Create, Read, Update, Delete)
+- Query: Commands that perform those operations
 
 # Schema: 
 A Schema defines the structure of our data. 
@@ -340,3 +345,27 @@ CREATE TABLE users (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 );
 ```
+
+# CRUD Operations:
+
+## INSERT (Create)
+  - Basic insert
+  - Multi-row insert
+  - RETURNING clause
+  - ON CONFLICT (UPSERT)
+
+## SELECT (Read)
+  - WHERE conditions
+  - Filtering operators (IN, BETWEEN, LIKE, etc.)
+  - ORDER BY, LIMIT, OFFSET
+  - DISTINCT
+
+## UPDATE
+  - UPDATE with WHERE
+  - RETURNING clause
+  - CASE-based updates
+
+## DELETE
+  - DELETE with WHERE
+  - RETURNING clause
+  - Soft delete pattern

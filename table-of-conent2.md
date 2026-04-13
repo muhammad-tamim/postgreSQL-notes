@@ -1,8 +1,4 @@
 
-- [4. Data Types (Core + Advanced)](#4-data-types-core--advanced)
-  - [Constraints:](#constraints)
-- [6. Relationships](#6-relationships)
-  - [ON DELETE / ON UPDATE:](#on-delete--on-update)
 - [7. CRUD Operations (Core SQL)](#7-crud-operations-core-sql)
   - [Create (INSERT)](#create-insert)
   - [Read (SELECT)](#read-select)
@@ -32,37 +28,6 @@
 - [27. Example](#27-example)
   - [Example 1: Express + PostgreSQL + Raw SQL](#example-1-express--postgresql--raw-sql)
 
-
-
-
-## 4. Data Types (Core + Advanced)
-
-### Constraints:
-
-* PRIMARY KEY
-* FOREIGN KEY
-* UNIQUE
-* NOT NULL
-* CHECK
-* DEFAULT
-
----
-
-## 6. Relationships
-
-* One-to-One
-* One-to-Many
-* Many-to-Many
-* Junction Tables
-* Referential Integrity
-
-### ON DELETE / ON UPDATE:
-
-* CASCADE
-* SET NULL
-* RESTRICT
-
----
 
 ## 7. CRUD Operations (Core SQL)
 

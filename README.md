@@ -8,8 +8,6 @@
     - [ACID Compliance:](#acid-compliance)
     - [Base Compliance:](#base-compliance)
     - [Difference Between ACID and Base Compliance:](#difference-between-acid-and-base-compliance)
-  - [PostgreSQL vs MySQL Vs MongoDB:](#postgresql-vs-mysql-vs-mongodb)
-  - [Schema vs Query vs CRUD:](#schema-vs-query-vs-crud)
 - [Schema:](#schema)
   - [Common Data Types:](#common-data-types)
     - [Numeric types:](#numeric-types)
@@ -102,22 +100,6 @@ BASE is a set of principles designed for high availability and scalability in di
 | Use Case       | Banking, payments, orders         | Social media, analytics, real-time apps |
 | Database Type  | Relational (PostgreSQL, MySQL)    | NoSQL (MongoDB, Cassandra)              |
 
-
-## PostgreSQL vs MySQL Vs MongoDB: 
-| Feature        | PostgreSQL                     | MySQL                   | MongoDB                |
-| -------------- | ------------------------------ | ----------------------- | ---------------------- |
-| Type           | Relational (RDBMS)             | Relational (RDBMS)      | Document-based         |
-| Schema         | Strict (but flexible via JSON) | Strict                  | Schema-less            |
-| Query Language | SQL (advanced)                 | SQL (simpler)           | N/A                    |
-| Transactions   | Full ACID support              | ACID (less advanced)    | Limited (improving)    |
-| Relationships  | Strong (JOINs, FK)             | Supported               | Weak / manual          |
-| JSON Support   | Yes (JSONB, powerful)          | Limited                 | Native                 |
-| Performance    | Best for complex queries       | Fast for simple queries | Best for flexible data |
-
-## Schema vs Query vs CRUD: 
-- Schema: Structure of the data
-- CRUD: Types of operations (Create, Read, Update, Delete)
-- Query: Commands that perform those operations
 
 # Schema: 
 A Schema defines the structure of our data. 

@@ -30,6 +30,20 @@
     - [SERIAL:](#serial)
     - [IDENTITY:](#identity)
 - [CRUD Operations:](#crud-operations)
+  - [Create (POST):](#create-post)
+    - [INSERT INTO:](#insert-into)
+      - [Insert single row:](#insert-single-row)
+      - [Insert multiple row:](#insert-multiple-row)
+  - [Read (GET):](#read-get)
+    - [SELECT (Get All):](#select-get-all)
+    - [SELECT WHERE (Get Single):](#select-where-get-single)
+    - [SELECT Helpers:](#select-helpers)
+    - [Filtering:](#filtering)
+    - [aggregate():](#aggregate)
+      - [Common Aggregation Stages:](#common-aggregation-stages)
+    - [DISTINCT:](#distinct)
+  - [UPDATE (PUT/PATCH):](#update-putpatch)
+  - [Delete (DELETE):](#delete-delete)
   - [INSERT (Create)](#insert-create)
   - [SELECT (Read)](#select-read)
   - [UPDATE](#update)
@@ -347,6 +361,124 @@ CREATE TABLE users (
 ```
 
 # CRUD Operations:
+
+## Create (POST): 
+### INSERT INTO: 
+####  Insert single row: 
+
+With returning all: 
+
+```sql
+app.post("/notes", async (req: Request, res: Response) => {
+  try {
+    const { name, description } = req.body;
+
+    const result = await pool.query(
+      "INSERT INTO notes (name, description) VALUES ($1, $2) RETURNING *",
+      [name, description]
+    );
+
+    res.send(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to create note" });
+  }
+});
+```
+
+With custom returning: 
+
+```sql
+app.post("/notes", async (req: Request, res: Response) => {
+  try {
+    const { name, description } = req.body;
+
+    const result = await pool.query(
+      `INSERT INTO notes (name, description) VALUES ($1, $2) RETURNING id, name`,
+      [name, description]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to create note" });
+  }
+});
+```
+
+#### Insert multiple row: 
+
+```sql
+app.post("/notes/bulk", async (req: Request, res: Response) => {
+  try {
+    const notes = req.body.notes; // [{name, description}, ...]
+
+    const values: any[] = [];
+    const placeholders = notes
+      .map((note: any, i: number) => {
+        const idx = i * 2;
+        values.push(note.name, note.description);
+        return `($${idx + 1}, $${idx + 2})`;
+      })
+      .join(", ");
+
+    const query = `
+      INSERT INTO notes (name, description)
+      VALUES ${placeholders}
+      RETURNING *
+    `;
+
+    const result = await pool.query(query, values);
+
+    res.status(201).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Bulk insert failed" });
+  }
+});
+```
+
+## Read (GET):
+### SELECT (Get All): 
+```sql
+app.get("/users", async (_req: Request, res: Response) => {
+  const result = await pool.query("SELECT * FROM users");
+  res.json(result.rows);
+});
+```
+
+### SELECT WHERE (Get Single): 
+
+```sql
+app.get("/users/:id", async (req: Request, res: Response) => {
+  const result = await pool.query(
+    "SELECT * FROM users WHERE id = $1",
+    [req.params.id]
+  );
+
+  res.json(result.rows[0]);
+});
+```
+
+### SELECT Helpers: 
+### Filtering: 
+### aggregate():
+#### Common Aggregation Stages:
+
+### DISTINCT: 
+
+```sql
+app.get("/users/emails", async (_req: Request, res: Response) => {
+  const result = await pool.query(
+    "SELECT DISTINCT email FROM users"
+  );
+
+  res.json(result.rows);
+});
+```
+
+
+## UPDATE (PUT/PATCH):
+## Delete (DELETE):
+
+
 
 ## INSERT (Create)
   - Basic insert

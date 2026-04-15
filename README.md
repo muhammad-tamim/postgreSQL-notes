@@ -8,6 +8,23 @@
     - [ACID Compliance:](#acid-compliance)
     - [Base Compliance:](#base-compliance)
     - [Difference Between ACID and Base Compliance:](#difference-between-acid-and-base-compliance)
+- [Managing Database and Table:](#managing-database-and-table)
+  - [Database:](#database)
+    - [Create Database:](#create-database)
+    - [Get Databases:](#get-databases)
+    - [Rename Database:](#rename-database)
+    - [Delete Database](#delete-database)
+  - [Table:](#table)
+    - [Create and view Table structure:](#create-and-view-table-structure)
+    - [Delete and TRUNCATE Table:](#delete-and-truncate-table)
+    - [ALTER TABLE:](#alter-table)
+      - [Rename a table:](#rename-a-table)
+      - [Rename Column:](#rename-column)
+      - [Add Column:](#add-column)
+      - [Remove Column:](#remove-column)
+      - [Change Data Type:](#change-data-type)
+      - [Add Constraint:](#add-constraint)
+      - [Remove Constraint:](#remove-constraint)
 - [Schema:](#schema)
   - [Common Data Types:](#common-data-types)
     - [Numeric types:](#numeric-types)
@@ -62,6 +79,8 @@ Note: Beekeeper Studio if more preferable.
 ## What is PostgreSQL:
 PostgreSQL (often called Postgres) is a relational database management system (RDBMS) that stores data in tables (rows and columns) format by using SQL (structure query language). 
 
+
+
 ## Features of PostgreSQL: 
 - Relational Database with SQL + Advance SQL
 - ACID Compliance
@@ -100,6 +119,152 @@ BASE is a set of principles designed for high availability and scalability in di
 | Use Case       | Banking, payments, orders         | Social media, analytics, real-time apps |
 | Database Type  | Relational (PostgreSQL, MySQL)    | NoSQL (MongoDB, Cassandra)              |
 
+
+# Managing Database and Table:
+
+## Database:
+### Create Database: 
+
+```sql
+CREATE DATABASE my_app;
+```
+
+### Get Databases:
+
+```sql
+SELECT datname FROM pg_database;
+```
+
+### Rename Database: 
+
+```sql
+ALTER DATABASE my_app RENAME TO my_app_v2;
+```
+
+### Delete Database
+
+```sql
+DROP DATABASE my_app;
+```
+
+## Table:
+
+### Create and view Table structure: 
+
+- Create Table:
+
+```sql
+CREATE TABLE IF NOT EXISTS table_name (
+  column_name data_type column_constraints
+  column_name data_type column_constraints
+  column_name data_type column_constraints
+);
+```
+
+Creates a new table by copying structure and/or data from an existing table: 
+
+```sql
+-- Copy structure AND data
+CREATE TABLE employees_backup AS SELECT * FROM employees;
+```
+
+```sql
+-- Copy structure only (no data)
+CREATE TABLE employees_backup AS SELECT * FROM employees WHERE 1 = 0;
+-- The WHERE 1=0 trick copies columns but returns zero rows, giving you an empty copy of the table structure.
+```
+
+- View Table Structure: 
+
+```sql
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'users';
+```
+
+for views every table in the public schema (our default working schema).
+
+```sql
+SELECT table_name, table_type
+FROM information_schema.tables
+WHERE table_schema = 'public'
+ORDER BY table_name
+```
+
+### Delete and TRUNCATE Table: 
+
+- Delete: Permanently removes the table and all its data, 
+  
+```sql
+DROP TABLE users;
+-- or
+DROP TABLE IF EXISTS users;
+```
+
+- Truncate: Deletes every row instantly but leaves the table structure intact. Much faster than DELETE for large tables.
+
+```sql
+TRUNCATE TABLE employees;
+```
+  
+### ALTER TABLE:
+Alter table means modify an existing table’s schema
+
+####  Rename a table: 
+
+```sql
+ALTER TABLE employees
+  RENAME TO staff;
+```
+
+#### Rename Column: 
+
+```sql
+ALTER TABLE users RENAME COLUMN name TO full_name;
+```
+
+#### Add Column: 
+
+```sql
+ALTER TABLE users ADD COLUMN age INT;
+``` 
+
+#### Remove Column: 
+
+```sql
+ALTER TABLE users DROP COLUMN age;
+```
+
+#### Change Data Type: 
+
+```sql
+ALTER TABLE users
+ALTER COLUMN age TYPE BIGINT;
+```
+
+#### Add Constraint: 
+
+```sql
+ALTER TABLE users
+ALTER COLUMN email SET NOT NULL;
+```
+
+```sql
+ALTER TABLE users
+ADD CONSTRAINT unique_email UNIQUE (email);
+```
+
+```sql
+ALTER TABLE users
+ALTER COLUMN is_active SET DEFAULT true;
+```
+
+#### Remove Constraint: 
+
+```sql
+ALTER TABLE users
+DROP CONSTRAINT unique_email;
+```
 
 # Schema: 
 A Schema defines the structure of our data. 
@@ -341,6 +506,7 @@ CREATE TABLE users (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 );
 ```
+
 
 # CRUD Operations:
 

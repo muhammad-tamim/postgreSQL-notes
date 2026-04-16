@@ -76,6 +76,7 @@
     - [PATCH (partial update - recommended):](#patch-partial-update---recommended)
     - [PUT (Full Replace):](#put-full-replace)
   - [DELETE:](#delete)
+- [Indexing:](#indexing)
 
 # Setup: 
 - Step 1: Download postgres and install:
@@ -1458,3 +1459,43 @@ app.delete("/notes/:id", async (req: Request, res: Response) => {
     }
 });
 ```
+
+# Indexing: 
+An index is a special data structure that helps PostgreSQL find rows faster.
+-  Without index: full table scan (slow)
+- With index: direct lookup (fast)
+
+Syntax: 
+
+```sql
+CREATE INDEX index_name
+ON table_name(column_name);
+```
+
+
+- Example:
+
+```sql
+CREATE INDEX idx_users_email ON users(email);
+```
+
+Now email search becomes fast:
+
+```js
+app.get("/users/email", async (req, res) => {
+  try {
+    const email = req.query.email;
+
+    const result = await pool.query(
+      `SELECT * FROM users WHERE email = $1`,
+      [email]
+    );
+
+    res.send(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+```
+

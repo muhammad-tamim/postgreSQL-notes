@@ -16,7 +16,6 @@
 - [19. Real-World Examples](#19-real-world-examples)
 
 
----
 
 ### 05. Querying & Filtering (Intermediate)
 - JOINs (INNER, LEFT, RIGHT, FULL, CROSS)

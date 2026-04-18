@@ -307,13 +307,16 @@ here,
 | Type               | Description                                                 | Example                                  |
 | ------------------ | ----------------------------------------------------------- | ---------------------------------------- |
 | `SMALLINT`         | 2 bytes (small numbers)                                     | age, quantity etc only small numbers     |
-| `INT`              | 4 bytes (most common)                                       | default choice                           |
+| `INT/INTEGER`      | 4 bytes (most common)                                       | default choice                           |
 | `BIGINT`           | 8 bytes (large numbers)                                     | large counters when overflow is possible |
 | `NUMERIC/DECIMAL`  | variable (exact precision)                                  | money or exact values (always)           |
 | `REAL`             | 4 bytes (less precise float, ~6 decimal digits precision)   | approximate scientific data only         |
 | `DOUBLE PRECISION` | 8 Bytes (high precision float, 15 decimal digits precision) | approximate scientific data only         |
+| `FLOAT(n)`         | alias for REAL or DOUBLE PRECISION depending on precision n | rarely used (prefer explicit types)      |
 | `SERIAL`           | 4 bytes same as INT (Auto increment 1, 2, 3, 4)             | For PRIMARY KEY                          |
 | ` BIGSERIAL`       | 8 bytes same as BIGINT (Auto increment 1, 2, 3, 4)          | For Large PRIMARY KEY                    |
+
+
 
 ```sql
 CREATE TABLE IF NOT EXISTS numeric_types_demo (
@@ -332,6 +335,28 @@ CREATE TABLE IF NOT EXISTS numeric_types_demo (
 );
 ```
 
+Note: 
+```
+FLOAT(1-24)   → REAL
+FLOAT(25-53)  → DOUBLE PRECISION
+```
+
+Note: NUMERIC can have two parameter:
+- 1st is Precision: Total number of digits allowed (both sides of decimal) 
+- 2nd is Scale: Number of digits allowed after the decimal point  
+
+SO NUMERIC(10,2) means it precision is total 10 digit (before 8 and after 2): 
+
+```js
+12345678.90   ✅ (8 before, 2 after)
+1.23          ✅ (okay)
+-99999999.99  ✅ (min)
+99999999.99   ✅ (max)
+
+123456789.12  ❌ (9 digits before → too big)
+12.123        ❌ (3 decimal places → too many)
+```
+
 ### String types:
 
 | Type         | Description                                   | Example                         |
@@ -340,6 +365,7 @@ CREATE TABLE IF NOT EXISTS numeric_types_demo (
 | `VARCHAR(n)` | Variable n length string with limit           | names, titles (`'Tamim'`)       |
 | `TEXT`       | Variable-length length string                 | descriptions, blog content      |
 
+Note: there is no performance difference between TEXT and VARCHAR in PostgreSQL. The Only Real Difference VARCHAR(n) adds a constraint.
 
 ```sql
 CREATE TABLE IF NOT EXISTS string_types_demo (
@@ -378,7 +404,7 @@ CREATE TABLE IF NOT EXISTS datetime_types_demo (
 ### Others Types: 
 | Type            | Description                                                      | Example                                                     |
 | --------------- | ---------------------------------------------------------------- | ----------------------------------------------------------- |
-| `BOOLEAN`       | Accepts true, false and null by: TRUE, FALSE, NULL, 1/0, 't'/'f' | is_active                                                   |
+| `BOOLEAN/BOOL`  | Accepts true, false and null by: TRUE, FALSE, NULL, 1/0, 't'/'f' | is_active                                                   |
 | `UUID`          | Universally unique identifier                                    | user_id, order_id: `'550e8400-e29b-41d4-a716-446655440000'` |
 | `JSON`          | Stores JSON as text (text format, slower)                        | `'{"name": "Tamim"}'`                                       |
 | `JSONB`         | Binary JSON (faster, indexable, recommended)                     | `'{"name": "Tamim"}'`                                       |

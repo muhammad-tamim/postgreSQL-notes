@@ -69,6 +69,7 @@
         - [LEFT JOIN](#left-join)
         - [RIGHT JOIN](#right-join)
         - [FULL JOIN](#full-join)
+        - [CROSS JOIN:](#cross-join)
     - [Common Select Functions:](#common-select-functions)
     - [Subqueries](#subqueries)
     - [CASE:](#case)
@@ -1219,6 +1220,39 @@ ON users.id = orders.user_id;
 | Sara  | NULL   |
 | NULL  | 300    |
 
+##### CROSS JOIN: 
+Returns ALL possible combinations (Cartesian product) of rows from both tables.
+- No ON condition needed
+- Every row from users pairs with every row from orders
+
+```sql
+SELECT users.name, orders.amount
+FROM users
+CROSS JOIN orders;
+```
+
+| name  | amount |
+| ----- | ------ |
+| Tamim | 100    |
+| Tamim | 200    |
+| Tamim | 150    |
+| Tamim | 300    |
+| John  | 100    |
+| John  | 200    |
+| John  | 150    |
+| John  | 300    |
+| Sara  | 100    |
+| Sara  | 200    |
+| Sara  | 150    |
+| Sara  | 300    |
+
+here, 
+
+- users = 3 rows
+- orders = 4 rows
+- Result = 3 × 4 = 12 rows
+
+This is not a “relationship-based” join like others—this is a combinatorial expansion.
 
 ### Common Select Functions:
 
